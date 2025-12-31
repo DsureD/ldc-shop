@@ -12,12 +12,45 @@ export default async function Home() {
     products = await getProducts();
   } catch (error: any) {
     if (error.message?.includes('relation "products" does not exist')) {
-      console.log("Database initialized check: Table missing. Running migrations...");
-      const { migrate } = await import("drizzle-orm/vercel-postgres/migrator");
+      console.log("Database initialized check: Table missing. Running inline migrations...");
       const { db } = await import("@/lib/db");
-      const path = await import("path");
+      const { sql } = await import("drizzle-orm");
 
-      await migrate(db, { migrationsFolder: path.join(process.cwd(), "lib/db/migrations") });
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS products (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT,
+          price DECIMAL(10, 2) NOT NULL,
+          category TEXT,
+          image TEXT,
+          created_at TIMESTAMP DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS cards (
+          id SERIAL PRIMARY KEY,
+          product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+          card_key TEXT NOT NULL,
+          is_used BOOLEAN DEFAULT FALSE,
+          used_at TIMESTAMP,
+          created_at TIMESTAMP DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS orders (
+          order_id TEXT PRIMARY KEY,
+          product_id TEXT NOT NULL,
+          product_name TEXT NOT NULL,
+          amount DECIMAL(10, 2) NOT NULL,
+          email TEXT,
+          status TEXT DEFAULT 'pending',
+          trade_no TEXT,
+          card_key TEXT,
+          paid_at TIMESTAMP,
+          delivered_at TIMESTAMP,
+          user_id TEXT,
+          username TEXT,
+          created_at TIMESTAMP DEFAULT NOW()
+        );
+      `);
+
       products = await getProducts();
     } else {
       throw error;
