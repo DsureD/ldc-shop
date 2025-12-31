@@ -16,7 +16,7 @@ export async function GET() {
 
         // Attempt migration
         // For Vercel Postgres, we use the specific migrator
-        await migrate(db, { migrationsFolder: "./lib/db/migrations" });
+        await migrate(db, { migrationsFolder: path.join(process.cwd(), "lib/db/migrations") });
 
         return NextResponse.json({ success: true, message: "Database initialized successfully" });
     } catch (error: any) {
