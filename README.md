@@ -23,7 +23,6 @@ During the deployment process, you will be asked for the following environment v
     *   **Callback URL** in Linux DO Connect should be: `https://YOUR_DOMAIN.vercel.app/api/auth/callback/linuxdo` (or your custom domain).
     *   `MERCHANT_ID` / `MERCHANT_KEY`: Get from [credit.linux.do](https://credit.linux.do).
 3.  **ADMIN_USERS**: Your Linux DO username (e.g., `chatgpt,admin`).
-4.  **AUTH_TRUST_HOST**: Set to `true` to ensure authentication works correctly on Vercel.
 
 The database (Vercel Postgres) will be automatically provisioned and linked.
 
