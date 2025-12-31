@@ -2,57 +2,5 @@
     "buildCommand": "npx drizzle-kit push && next build",
     "devCommand": "next dev",
     "installCommand": "npm install",
-    "framework": "nextjs",
-    "env": {
-        "POSTGRES_URL": {
-            "description": "Vercel Postgres Connection String",
-            "value": ""
-        },
-        "POSTGRES_PRISMA_URL": {
-            "value": ""
-        },
-        "POSTGRES_URL_NON_POOLING": {
-            "value": ""
-        },
-        "POSTGRES_USER": {
-            "value": ""
-        },
-        "POSTGRES_HOST": {
-            "value": ""
-        },
-        "POSTGRES_PASSWORD": {
-            "value": ""
-        },
-        "POSTGRES_DATABASE": {
-            "value": ""
-        },
-        "NEXTAUTH_SECRET": {
-            "description": "Random string for Auth.js",
-            "value": ""
-        },
-        "NEXTAUTH_URL": {
-            "description": "Your deployment URL (e.g. https://your-shop.vercel.app)",
-            "value": ""
-        },
-        "OAUTH_CLIENT_ID": {
-            "description": "Linux DO Connect Client ID",
-            "value": ""
-        },
-        "OAUTH_CLIENT_SECRET": {
-            "description": "Linux DO Connect Client Secret",
-            "value": ""
-        },
-        "MERCHANT_ID": {
-            "description": "Linux DO Credit Merchant ID",
-            "value": ""
-        },
-        "MERCHANT_KEY": {
-            "description": "Linux DO Credit Merchant Key",
-            "value": ""
-        },
-        "ADMIN_USERS": {
-            "description": "Comma-separated list of admin usernames",
-            "value": "chatgpt"
-        }
-    }
+    "framework": "nextjs"
 }
