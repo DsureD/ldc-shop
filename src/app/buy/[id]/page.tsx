@@ -87,7 +87,7 @@ export default async function BuyPage({ params }: BuyPageProps) {
                     <CardFooter className="pt-6">
                         {session?.user ? (
                             stockCount > 0 ? (
-                                <BuyButton productId={product.id} productName={product.name} price={Number(product.price)} />
+                                <BuyButton productId={product.id} />
                             ) : (
                                 <p className="text-destructive">This product is currently out of stock.</p>
                             )
