@@ -22,11 +22,11 @@ export function HomeContent({ products }: { products: Product[] }) {
 
     return (
         <main className="container py-8 md:py-12">
-            <section className="mb-12 space-y-4 text-center">
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent pb-2">
+            <section className="mb-10 space-y-3 text-center">
+                <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl text-foreground">
                     {t('common.appName')}
                 </h1>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                <p className="mx-auto max-w-[500px] text-muted-foreground text-sm">
                     {t('home.subtitle')}
                 </p>
             </section>
