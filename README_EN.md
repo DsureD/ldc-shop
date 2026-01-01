@@ -2,14 +2,6 @@
 
 [中文说明](./README.md)
 
-> ⚠️ **WARNING**
->
-> **This project (Next.js Edition) is currently under testing. The code is NOT stable. DO NOT deploy!**
->
-> 🚀 **Want to use it now? Deploy the stable version (Cloudflare Workers Edition):**
->
-> **[View Stable Version Guide → `_legacy/README.md`](./_legacy/README.md)**
-
 ---
 
 A robust, serverless virtual goods shop built with **Next.js 16**, **Vercel Postgres**, **Shadcn UI**, and **Linux DO Connect**.

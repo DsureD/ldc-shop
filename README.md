@@ -2,14 +2,6 @@
 
 [English](./README_EN.md)
 
-> ⚠️ **警告**
->
-> **本项目 (Next.js 版本) 目前正在测试中，代码尚未稳定，请勿部署！**
->
-> 🚀 **想要立即使用？请部署稳定版 (Cloudflare Workers 版)：**
->
-> **[点击查看稳定版部署指南 → `_legacy/README.md`](./_legacy/README.md)**
-
 ---
 
 基于 **Next.js 16**、**Vercel Postgres**、**Shadcn UI** 和 **Linux DO Connect** 构建的强大的无服务器虚拟商品商店。
