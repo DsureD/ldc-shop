@@ -24,6 +24,7 @@ export default async function BuyPage({ params }: BuyPageProps) {
             price: products.price,
             image: products.image,
             category: products.category,
+            isActive: products.isActive,
         })
         .from(products)
         .where(eq(products.id, id))
@@ -31,7 +32,8 @@ export default async function BuyPage({ params }: BuyPageProps) {
 
     const product = result[0]
 
-    if (!product) {
+    // Return 404 if product doesn't exist or is inactive
+    if (!product || product.isActive === false) {
         notFound()
     }
 
