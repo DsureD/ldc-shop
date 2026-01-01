@@ -40,7 +40,7 @@ export function OrderContent({ order, canViewKey }: OrderContentProps) {
 
     const getStatusMessage = (status: string) => {
         switch (status) {
-            case 'paid': return t('order.paymentReceived')
+            case 'paid': return t('order.stockDepleted') // If status is 'paid' but not 'delivered', it means stock ran out
             case 'refunded': return t('order.orderRefunded')
             default: return t('order.waitingPayment')
         }
@@ -120,13 +120,13 @@ export function OrderContent({ order, canViewKey }: OrderContentProps) {
                             </div>
                         )
                     ) : (
-                        <div className="flex items-center gap-3 text-muted-foreground p-4 bg-muted/20 rounded-lg">
-                            <Clock className="h-5 w-5" />
+                        <div className={`flex items-center gap-3 p-4 rounded-lg border ${order.status === 'paid' ? 'bg-red-50 text-red-900 border-red-200' : 'bg-muted/20 text-muted-foreground border-transparent'}`}>
+                            {order.status === 'paid' ? <AlertCircle className="h-5 w-5" /> : <Clock className="h-5 w-5" />}
                             <p className="text-sm">{getStatusMessage(order.status)}</p>
                         </div>
                     )}
                 </CardContent>
             </Card>
-        </main>
+        </main >
     )
 }

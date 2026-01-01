@@ -14,6 +14,11 @@ export default async function CallbackPage({
     // If not in params, fallback to history or home
     // We do NOT use cookies here to avoid race conditions with multiple tabs
 
+    // Handle array case (if EPay appends param matching ours)
+    if (Array.isArray(orderId)) {
+        orderId = orderId[0];
+    }
+
     if (orderId && typeof orderId === 'string') {
         redirect(`/order/${orderId}`);
     }

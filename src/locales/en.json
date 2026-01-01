@@ -55,6 +55,7 @@
         "loginToView": "Please login with the account used to purchase to view the content.",
         "waitingPayment": "Waiting for payment...",
         "paymentReceived": "Payment received. Processing delivery...",
+        "stockDepleted": "Payment received but stock was depleted. Please contact admin for refund.",
         "orderRefunded": "This order has been refunded.",
         "status": {
             "pending": "Pending",
