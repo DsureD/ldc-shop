@@ -68,8 +68,8 @@ export async function SiteHeader() {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
-                            <Link href="/api/auth/signin">
-                                <Button size="sm">Login</Button>
+                            <Link href="/api/auth/signin/linuxdo">
+                                <Button size="sm">Sign in with Linux DO</Button>
                             </Link>
                         )}
                     </nav>
