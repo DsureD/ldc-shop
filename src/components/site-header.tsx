@@ -11,6 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ShoppingBag, User } from "lucide-react"
+import { SignInButton } from "@/components/signin-button"
 
 export async function SiteHeader() {
     const session = await auth()
@@ -69,9 +70,7 @@ export async function SiteHeader() {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
-                            <Link href="/api/auth/signin/linuxdo">
-                                <Button size="sm">Sign in with Linux DO</Button>
-                            </Link>
+                            <SignInButton />
                         )}
                     </nav>
                 </div>
