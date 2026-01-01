@@ -1,5 +1,7 @@
 # LDC Shop (Next.js Edition)
 
+[English](#ldc-shop-nextjs-edition) | [中文](#-中文说明)
+
 > ⚠️ **警告 / WARNING** ⚠️
 > 
 > **本项目 (Next.js 版本) 目前正在测试中，代码尚未稳定，请勿部署！**
@@ -28,18 +30,45 @@ A robust, serverless virtual goods shop built with **Next.js 16**, **Vercel Post
 
 Click the button above to deploy your own instance to Vercel.
 
-### Configuration Guide
-
-During the deployment process, you will be asked for the following environment variables:
-
-1.  **Linux DO Credentials**:
-    *   `OAUTH_CLIENT_ID` / `OAUTH_CLIENT_SECRET`: Get from [connect.linux.do](https://connect.linux.do).
-    *   **Callback URL** in Linux DO Connect should be: `https://YOUR_DOMAIN/api/auth/callback/linuxdo`.
-    *   `MERCHANT_ID` / `MERCHANT_KEY`: Get from [credit.linux.do](https://credit.linux.do).
-2.  **ADMIN_USERS**: Your Linux DO username (e.g., `chatgpt,admin`).
-3.  **NEXT_PUBLIC_APP_URL**: Your deployment URL (e.g., `https://your-domain.com`). Required for payment callbacks.
-
 The database (Vercel Postgres) will be automatically provisioned and linked.
+
+## ⚠️ Important: Refund WAF Issue
+
+The Refund API of Linux DO Credit is strictly protected by Cloudflare WAF. Direct server-side requests may be blocked (403 Forbidden).
+
+**Current Workaround:**
+This project uses a **Client-side API call** solution (via Form submission). When an admin clicks the "Refund" button, it opens a new tab and the browser directly calls the Linux DO Credit Refund API. After confirming success from the API response, the admin returns to the system and clicks "Mark Refunded" to update the order status.
+
+## ⚙️ Configuration Guide
+
+The following environment variables are required.
+
+> **⚠️ NOTE**: 
+> The following configuration uses `store.chatgpt.org.uk` as an example. **Please replace it with your ACTUAL domain when deploying!**
+
+### 1. Linux DO Connect (OIDC)
+Go to [connect.linux.do](https://connect.linux.do) to create/configure:
+
+*   **App Name**: `LDC Store Next` (or any name)
+*   **App Homepage**: `https://store.chatgpt.org.uk`
+*   **App Description**: `LDC Store Next`
+*   **Callback URL**: `https://store.chatgpt.org.uk/api/auth/callback/linuxdo`
+
+Get **Client ID** and **Client Secret**, and fill them into Vercel Environment Variables as `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET`.
+
+### 2. EPay (Linux DO Credit)
+Go to [credit.linux.do](https://credit.linux.do) to create/configure:
+
+*   **App Name**: `LDC Store Next` (or any name)
+*   **App Address**: `https://store.chatgpt.org.uk`
+*   **Callback URI**: `https://store.chatgpt.org.uk/callback`
+*   **Notify URL**: `https://store.chatgpt.org.uk/api/notify`
+
+Get **Client ID** and **Client Secret**, and fill them into Vercel Environment Variables as `MERCHANT_ID` and `MERCHANT_KEY`.
+
+### 3. Other Variables
+*   **ADMIN_USERS**: Admin usernames, comma separated (e.g., `chatgpt,admin`).
+*   **NEXT_PUBLIC_APP_URL**: Your full app URL (e.g., `https://store.chatgpt.org.uk`).
 
 ## 🇨🇳 中文说明
 
