@@ -69,7 +69,7 @@ export function HomeContent({ products }: { products: Product[] }) {
                                             {t('common.sold')}: {product.soldCount}
                                         </Badge>
                                         <Badge variant={product.stockCount > 0 ? "secondary" : "destructive"}>
-                                            {product.stockCount > 0 ? `${product.stockCount} ${t('common.inStock')}` : t('common.outOfStock')}
+                                            {product.stockCount > 0 ? `${t('common.stock')}: ${product.stockCount}` : t('common.outOfStock')}
                                         </Badge>
                                     </div>
                                     <Link href={`/buy/${product.id}`}>
