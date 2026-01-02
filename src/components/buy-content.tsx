@@ -43,7 +43,7 @@ export function BuyContent({ product, stockCount, isLoggedIn }: BuyContentProps)
                                     {Number(product.price)} <span className="text-sm font-normal">{t('common.credits')}</span>
                                 </div>
                                 <Badge variant={stockCount > 0 ? "outline" : "destructive"} className="mt-1">
-                                    {stockCount > 0 ? `${stockCount} ${t('common.inStock')}` : t('common.outOfStock')}
+                                    {stockCount > 0 ? `${t('common.stock')}: ${stockCount}` : t('common.outOfStock')}
                                 </Badge>
                             </div>
                         </div>
