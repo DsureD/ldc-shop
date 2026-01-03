@@ -39,7 +39,7 @@ export function BuyButton({ productId, disabled }: { productId: string, disabled
     }
 
     return (
-        <Button size="lg" className="w-full md:w-auto" onClick={handleBuy} disabled={disabled || loading}>
+        <Button size="lg" className="w-full md:w-auto bg-foreground text-background hover:bg-foreground/90" onClick={handleBuy} disabled={disabled || loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? t('common.processing') : t('common.buyNow')}
         </Button>

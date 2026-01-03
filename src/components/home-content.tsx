@@ -118,7 +118,7 @@ export function HomeContent({ products, announcement }: HomeContentProps) {
                                     <Link href={`/buy/${product.id}`}>
                                         <Button
                                             size="sm"
-                                            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 whitespace-nowrap"
+                                            className="bg-foreground text-background hover:bg-foreground/90 whitespace-nowrap"
                                         >
                                             {t('common.viewDetails')}
                                         </Button>
