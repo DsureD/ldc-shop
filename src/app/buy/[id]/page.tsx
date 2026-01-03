@@ -54,11 +54,18 @@ export default async function BuyPage({ params }: BuyPageProps) {
     try {
         reviews = await getProductReviews(id)
         rating = await getProductRating(id)
-        if (session?.user?.id) {
-            userCanReview = await canUserReview(session.user.id, id, session.user.username || undefined)
-        }
-    } catch {
+    } catch (e) {
         // Reviews table might not exist yet
+        console.log('Reviews fetch error:', e)
+    }
+
+    // Check review eligibility separately so it runs even if reviews table doesn't exist
+    if (session?.user?.id) {
+        try {
+            userCanReview = await canUserReview(session.user.id, id, session.user.username || undefined)
+        } catch (e) {
+            console.log('canUserReview error:', e)
+        }
     }
 
     return (
