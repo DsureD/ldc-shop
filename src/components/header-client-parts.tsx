@@ -14,8 +14,8 @@ export function HeaderLogo({ adminName }: { adminName?: string }) {
 
     return (
         <Link href="/" className="flex items-center gap-2 group text-muted-foreground hover:text-primary transition-colors">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary/25 transition-all duration-300">
-                <ShoppingBag className="h-4 w-4 text-primary-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-foreground flex items-center justify-center transition-all duration-300">
+                <ShoppingBag className="h-4 w-4 text-background" />
             </div>
             <span className="text-sm font-semibold tracking-tight">{shopName}</span>
         </Link>
