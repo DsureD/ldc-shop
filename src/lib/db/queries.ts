@@ -139,32 +139,76 @@ export async function createReview(data: {
     }).returning();
 }
 
-export async function canUserReview(userId: string, productId: string): Promise<{ canReview: boolean; orderId?: string }> {
-    // Check if user has a delivered order for this product that hasn't been reviewed yet
-    const deliveredOrders = await db.select({ orderId: orders.orderId })
-        .from(orders)
-        .where(and(
-            eq(orders.userId, userId),
-            eq(orders.productId, productId),
-            eq(orders.status, 'delivered')
-        ));
+export async function canUserReview(userId: string, productId: string, username?: string): Promise<{ canReview: boolean; orderId?: string }> {
+    try {
+        // Check if user has a delivered order for this product that hasn't been reviewed yet
+        // Check by userId OR username to handle both cases
+        const deliveredOrders = await db.select({ orderId: orders.orderId })
+            .from(orders)
+            .where(and(
+                eq(orders.productId, productId),
+                eq(orders.status, 'delivered')
+            ));
 
-    if (deliveredOrders.length === 0) {
+        // Filter orders that belong to this user (by userId or username)
+        const userOrders = deliveredOrders.filter(async (order) => {
+            const fullOrder = await db.select().from(orders).where(eq(orders.orderId, order.orderId));
+            const o = fullOrder[0];
+            return o?.userId === userId || (username && o?.username === username);
+        });
+
+        // Actually let's simplify - just get all delivered orders for this product by userId
+        const ordersByUserId = await db.select({ orderId: orders.orderId })
+            .from(orders)
+            .where(and(
+                eq(orders.userId, userId),
+                eq(orders.productId, productId),
+                eq(orders.status, 'delivered')
+            ));
+
+        // Also check by username if provided
+        let ordersByUsername: { orderId: string }[] = [];
+        if (username) {
+            ordersByUsername = await db.select({ orderId: orders.orderId })
+                .from(orders)
+                .where(and(
+                    eq(orders.username, username),
+                    eq(orders.productId, productId),
+                    eq(orders.status, 'delivered')
+                ));
+        }
+
+        // Merge unique orders
+        const allOrderIds = new Set([
+            ...ordersByUserId.map(o => o.orderId),
+            ...ordersByUsername.map(o => o.orderId)
+        ]);
+
+        if (allOrderIds.size === 0) {
+            return { canReview: false };
+        }
+
+        // Check if any of these orders haven't been reviewed
+        for (const orderId of allOrderIds) {
+            try {
+                const existingReview = await db.select({ id: reviews.id })
+                    .from(reviews)
+                    .where(eq(reviews.orderId, orderId));
+
+                if (existingReview.length === 0) {
+                    return { canReview: true, orderId };
+                }
+            } catch {
+                // Reviews table might not exist, so user can review
+                return { canReview: true, orderId };
+            }
+        }
+
+        return { canReview: false };
+    } catch {
+        // If any error occurs (like reviews table not existing), return false
         return { canReview: false };
     }
-
-    // Check if any of these orders haven't been reviewed
-    for (const order of deliveredOrders) {
-        const existingReview = await db.select({ id: reviews.id })
-            .from(reviews)
-            .where(eq(reviews.orderId, order.orderId));
-
-        if (existingReview.length === 0) {
-            return { canReview: true, orderId: order.orderId };
-        }
-    }
-
-    return { canReview: false };
 }
 
 export async function hasUserReviewedOrder(orderId: string): Promise<boolean> {

@@ -55,7 +55,7 @@ export default async function BuyPage({ params }: BuyPageProps) {
         reviews = await getProductReviews(id)
         rating = await getProductRating(id)
         if (session?.user?.id) {
-            userCanReview = await canUserReview(session.user.id, id)
+            userCanReview = await canUserReview(session.user.id, id, session.user.username || undefined)
         }
     } catch {
         // Reviews table might not exist yet
