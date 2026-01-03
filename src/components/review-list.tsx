@@ -39,7 +39,7 @@ export function ReviewList({ reviews, averageRating, totalCount }: ReviewListPro
                 <div className="space-y-1">
                     <StarRating rating={Math.round(averageRating)} size="md" />
                     <p className="text-sm text-muted-foreground">
-                        {t('review.totalReviews', { count: totalCount })}
+                        {totalCount} {t('review.title').toLowerCase()}
                     </p>
                 </div>
             </div>
