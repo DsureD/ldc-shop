@@ -1,4 +1,4 @@
-import { getActiveProducts, getSetting } from "@/lib/db/queries";
+import { getActiveProducts, getSetting, getProductRating } from "@/lib/db/queries";
 import { HomeContent } from "@/components/home-content";
 
 export const dynamic = 'force-dynamic';
@@ -90,12 +90,27 @@ export default async function Home() {
     // Settings table might not exist yet
   }
 
+  // Fetch ratings for each product
+  const productsWithRatings = await Promise.all(
+    products.map(async (p) => {
+      let rating = { average: 0, count: 0 };
+      try {
+        rating = await getProductRating(p.id);
+      } catch {
+        // Reviews table might not exist yet
+      }
+      return {
+        ...p,
+        stockCount: p.stock,
+        soldCount: p.sold || 0,
+        rating: rating.average,
+        reviewCount: rating.count
+      };
+    })
+  );
+
   return <HomeContent
-    products={products.map(p => ({
-      ...p,
-      stockCount: p.stock,
-      soldCount: p.sold || 0
-    }))}
+    products={productsWithRatings}
     announcement={announcement}
   />;
 }

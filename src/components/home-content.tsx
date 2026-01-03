@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { StarRating } from "@/components/star-rating"
 
 interface Product {
     id: string
@@ -15,6 +16,8 @@ interface Product {
     category: string | null
     stockCount: number
     soldCount: number
+    rating?: number
+    reviewCount?: number
 }
 
 interface HomeContentProps {
@@ -82,6 +85,13 @@ export function HomeContent({ products, announcement }: HomeContentProps) {
                                 <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors duration-300">
                                     {product.name}
                                 </h3>
+                                {/* Rating */}
+                                {product.reviewCount && product.reviewCount > 0 && (
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <StarRating rating={Math.round(product.rating || 0)} size="sm" />
+                                        <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
+                                    </div>
+                                )}
                                 <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
                                     {product.description || t('buy.noDescription')}
                                 </p>
