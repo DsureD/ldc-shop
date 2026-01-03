@@ -165,8 +165,25 @@ export async function canUserReview(userId: string, productId: string, username?
             return { canReview: false };
         }
 
-        // Return the first order - review submission will check duplicates
-        return { canReview: true, orderId: deliveredOrders[0].orderId };
+        // Find the first order that hasn't been reviewed yet
+        for (const order of deliveredOrders) {
+            try {
+                const existingReview = await db.select({ id: reviews.id })
+                    .from(reviews)
+                    .where(eq(reviews.orderId, order.orderId));
+
+                if (existingReview.length === 0) {
+                    // This order hasn't been reviewed yet
+                    return { canReview: true, orderId: order.orderId };
+                }
+            } catch {
+                // Reviews table might not exist, so user can review
+                return { canReview: true, orderId: order.orderId };
+            }
+        }
+
+        // All orders have been reviewed
+        return { canReview: false };
     } catch (error) {
         console.error('canUserReview error:', error);
         return { canReview: false };
