@@ -12,7 +12,13 @@ A robust, serverless virtual goods shop built with **Next.js 16**, **Vercel Post
 - **Modern Stack**: Next.js 16 (App Router), Tailwind CSS, TypeScript.
 - **Vercel Native**: One-click deploy with Vercel Postgres database.
 - **Linux DO Integration**: Built-in OIDC Login and EasyPay support.
-- **Admin Dashboard**: Products, Stock, Orders, and Refunds management.
+- **Rich User Experience**:
+    - 🌓 **Dark Mode**: Toggle between light, dark, and system themes.
+    - 🔍 **Search**: Real-time client-side product search.
+    - 🏷️ **Tag Filtering**: Auto-generated category sidebar for easy filtering.
+    - 📝 **Markdown Descriptions**: Rich text support (images, lists, links) for products.
+    - ⭐ **Reviews & Ratings**: Users can rate and review purchased products.
+- **Admin Dashboard**: Products (Markdown editor), Stock, Orders, and Refunds management.
 
 ## 🚀 One-Click Deploy
 
