@@ -30,6 +30,7 @@ interface HomeContentProps {
 export function HomeContent({ products, announcement }: HomeContentProps) {
     const { t } = useI18n()
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+    const [searchTerm, setSearchTerm] = useState("")
 
     // Extract unique categories
     const categories = useMemo(() => {
@@ -39,9 +40,24 @@ export function HomeContent({ products, announcement }: HomeContentProps) {
 
     // Filter products
     const filteredProducts = useMemo(() => {
-        if (!selectedCategory) return products
-        return products.filter(p => p.category === selectedCategory)
-    }, [products, selectedCategory])
+        let result = products
+
+        // Category filter
+        if (selectedCategory) {
+            result = result.filter(p => p.category === selectedCategory)
+        }
+
+        // Search filter
+        if (searchTerm) {
+            const lowerTerm = searchTerm.toLowerCase()
+            result = result.filter(p =>
+                p.name.toLowerCase().includes(lowerTerm) ||
+                (p.description && p.description.toLowerCase().includes(lowerTerm))
+            )
+        }
+
+        return result
+    }, [products, selectedCategory, searchTerm])
 
     return (
         <main className="container py-8 md:py-16">
@@ -64,39 +80,60 @@ export function HomeContent({ products, announcement }: HomeContentProps) {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 {/* Sidebar / Topbar for Categories */}
                 <aside className="lg:col-span-1">
-                    <div className="sticky top-24 space-y-4">
-                        <h2 className="text-lg font-semibold tracking-tight px-1 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                                <path d="M3 6h18" />
-                                <path d="M7 12h10" />
-                                <path d="M10 18h4" />
-                            </svg>
-                            {t('common.categories')}
-                        </h2>
-                        <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
-                            <Button
-                                variant={selectedCategory === null ? "default" : "ghost"}
-                                className={cn(
-                                    "justify-start whitespace-nowrap",
-                                    selectedCategory === null ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-muted"
-                                )}
-                                onClick={() => setSelectedCategory(null)}
+                    <div className="sticky top-24 space-y-6">
+                        {/* Search Input */}
+                        <div className="relative">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
                             >
-                                {t('common.all')}
-                            </Button>
-                            {categories.map(category => (
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <Input
+                                placeholder={t('common.searchPlaceholder')}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="pl-9 bg-muted/50 border-muted-foreground/20 focus:bg-background transition-colors"
+                            />
+                        </div>
+
+                        <div className="space-y-4">
+                            <h2 className="text-lg font-semibold tracking-tight px-1 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                                    <path d="M3 6h18" />
+                                    <path d="M7 12h10" />
+                                    <path d="M10 18h4" />
+                                </svg>
+                                {t('common.categories')}
+                            </h2>
+                            <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
                                 <Button
-                                    key={category}
-                                    variant={selectedCategory === category ? "default" : "ghost"}
+                                    variant={selectedCategory === null ? "default" : "ghost"}
                                     className={cn(
-                                        "justify-start capitalize whitespace-nowrap",
-                                        selectedCategory === category ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-muted"
+                                        "justify-start whitespace-nowrap",
+                                        selectedCategory === null ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-muted"
                                     )}
-                                    onClick={() => setSelectedCategory(category)}
+                                    onClick={() => setSelectedCategory(null)}
                                 >
-                                    {category}
+                                    {t('common.all')}
                                 </Button>
-                            ))}
+                                {categories.map(category => (
+                                    <Button
+                                        key={category}
+                                        variant={selectedCategory === category ? "default" : "ghost"}
+                                        className={cn(
+                                            "justify-start capitalize whitespace-nowrap",
+                                            selectedCategory === category ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-muted"
+                                        )}
+                                        onClick={() => setSelectedCategory(category)}
+                                    >
+                                        {category}
+                                    </Button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </aside>

@@ -98,14 +98,20 @@ export function BuyContent({
                             <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-primary/30 rounded-br-xl" />
                         </div>
 
+                        import ReactMarkdown from 'react-markdown'
+
+                        // ...
+
                         {/* Description */}
-                        <div className="space-y-2">
+                        <div className="space-y-4">
                             <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                                 {t('buy.description') || 'Description'}
                             </h3>
-                            <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap break-words">
-                                {product.description || t('buy.noDescription')}
-                            </p>
+                            <div className="prose prose-sm dark:prose-invert max-w-none text-foreground/80 leading-relaxed break-words">
+                                <ReactMarkdown>
+                                    {product.description || t('buy.noDescription')}
+                                </ReactMarkdown>
+                            </div>
                         </div>
                     </CardContent>
 

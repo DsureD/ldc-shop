@@ -5,6 +5,7 @@
         "login": "使用 Linux DO 登录",
         "categories": "商品分类",
         "all": "全部",
+        "searchPlaceholder": "搜索商品...",
         "logout": "退出登录",
         "admin": "管理",
         "adminTitle": "LDC 管理",

@@ -5,6 +5,7 @@
         "login": "Sign in with Linux DO",
         "categories": "Categories",
         "all": "All",
+        "searchPlaceholder": "Search products...",
         "logout": "Log out",
         "admin": "Admin",
         "adminTitle": "LDC Admin",
