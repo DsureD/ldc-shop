@@ -81,19 +81,19 @@ export function HomeContent({ products }: { products: Product[] }) {
                             </CardContent>
 
                             {/* Footer Section */}
-                            <CardFooter className="p-5 pt-0 flex items-end justify-between gap-4">
-                                <div>
-                                    <span className="text-3xl font-bold gradient-text">{Number(product.price)}</span>
-                                    <span className="text-muted-foreground text-sm ml-1.5">{t('common.credits')}</span>
+                            <CardFooter className="p-5 pt-0 flex items-end justify-between gap-3">
+                                <div className="shrink-0">
+                                    <span className="text-2xl sm:text-3xl font-bold gradient-text">{Number(product.price)}</span>
+                                    <span className="text-muted-foreground text-xs sm:text-sm ml-1">{t('common.credits')}</span>
                                 </div>
-                                <div className="flex flex-col items-end gap-2">
-                                    <div className="flex gap-1.5">
-                                        <Badge variant="outline" className="text-xs text-muted-foreground border-border/50">
+                                <div className="flex flex-col items-end gap-2 min-w-0">
+                                    <div className="flex flex-wrap justify-end gap-1.5">
+                                        <Badge variant="outline" className="text-xs text-muted-foreground border-border/50 whitespace-nowrap">
                                             {t('common.sold')}: {product.soldCount}
                                         </Badge>
                                         <Badge
                                             variant={product.stockCount > 0 ? "secondary" : "destructive"}
-                                            className={product.stockCount > 0 ? "text-xs" : "text-xs"}
+                                            className="text-xs whitespace-nowrap"
                                         >
                                             {product.stockCount > 0 ? `${t('common.stock')}: ${product.stockCount}` : t('common.outOfStock')}
                                         </Badge>
@@ -101,7 +101,7 @@ export function HomeContent({ products }: { products: Product[] }) {
                                     <Link href={`/buy/${product.id}`}>
                                         <Button
                                             size="sm"
-                                            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
+                                            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 whitespace-nowrap"
                                         >
                                             {t('common.viewDetails')}
                                         </Button>

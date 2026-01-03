@@ -40,6 +40,7 @@
     },
     "buy": {
         "title": "Product Details",
+        "description": "Description",
         "noDescription": "No description available.",
         "loginToBuy": "Please sign in to purchase this product.",
         "outOfStockMessage": "This product is currently out of stock."
