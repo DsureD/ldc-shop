@@ -145,5 +145,12 @@
         "switch": "Language",
         "en": "English",
         "zh": "中文"
+    },
+    "announcement": {
+        "title": "Announcement",
+        "placeholder": "Enter announcement content... (leave empty to hide)",
+        "save": "Save Announcement",
+        "saved": "Announcement saved!",
+        "hint": "This announcement will be displayed on the homepage. Leave empty to hide."
     }
 }

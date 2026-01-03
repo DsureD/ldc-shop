@@ -46,3 +46,11 @@ export const orders = pgTable('orders', {
    but for now we are replicating the Shop logic. 
    OIDC user info can be stored in session or a simple users table if needed.
 */
+
+// Settings (for announcements and global config)
+export const settings = pgTable('settings', {
+    key: text('key').primaryKey(),
+    value: text('value'),
+    updatedAt: timestamp('updated_at').defaultNow(),
+});
+

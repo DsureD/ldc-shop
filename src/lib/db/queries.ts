@@ -1,5 +1,5 @@
 import { db } from "./index";
-import { products, cards, orders } from "./schema";
+import { products, cards, orders, settings } from "./schema";
 import { eq, sql, desc, and, asc, gte } from "drizzle-orm";
 
 export async function getProducts() {
@@ -86,3 +86,19 @@ export async function getDashboardStats() {
     };
 }
 
+// Settings
+export async function getSetting(key: string): Promise<string | null> {
+    const result = await db.select({ value: settings.value })
+        .from(settings)
+        .where(eq(settings.key, key));
+    return result[0]?.value ?? null;
+}
+
+export async function setSetting(key: string, value: string): Promise<void> {
+    await db.insert(settings)
+        .values({ key, value, updatedAt: new Date() })
+        .onConflictDoUpdate({
+            target: settings.key,
+            set: { value, updatedAt: new Date() }
+        });
+}

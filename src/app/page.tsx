@@ -1,4 +1,4 @@
-import { getActiveProducts } from "@/lib/db/queries";
+import { getActiveProducts, getSetting } from "@/lib/db/queries";
 import { HomeContent } from "@/components/home-content";
 
 export const dynamic = 'force-dynamic';
@@ -57,6 +57,12 @@ export default async function Home() {
         -- Add columns if missing (for existing databases)
         ALTER TABLE products ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
         ALTER TABLE products ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0;
+        -- Settings table for announcements
+        CREATE TABLE IF NOT EXISTS settings (
+          key TEXT PRIMARY KEY,
+          value TEXT,
+          updated_at TIMESTAMP DEFAULT NOW()
+        );
       `);
 
       products = await getActiveProducts();
@@ -65,9 +71,20 @@ export default async function Home() {
     }
   }
 
-  return <HomeContent products={products.map(p => ({
-    ...p,
-    stockCount: p.stock,
-    soldCount: p.sold || 0
-  }))} />;
+  // Fetch announcement (with error handling for new databases)
+  let announcement: string | null = null;
+  try {
+    announcement = await getSetting('announcement');
+  } catch {
+    // Settings table might not exist yet
+  }
+
+  return <HomeContent
+    products={products.map(p => ({
+      ...p,
+      stockCount: p.stock,
+      soldCount: p.sold || 0
+    }))}
+    announcement={announcement}
+  />;
 }

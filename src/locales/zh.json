@@ -145,5 +145,12 @@
         "switch": "语言",
         "en": "English",
         "zh": "中文"
+    },
+    "announcement": {
+        "title": "公告管理",
+        "placeholder": "输入公告内容...（留空则隐藏公告）",
+        "save": "保存公告",
+        "saved": "公告已保存！",
+        "hint": "此公告将显示在首页。留空则不显示公告。"
     }
 }
