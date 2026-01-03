@@ -152,5 +152,18 @@
         "save": "Save Announcement",
         "saved": "Announcement saved!",
         "hint": "This announcement will be displayed on the homepage. Leave empty to hide."
+    },
+    "review": {
+        "title": "Reviews",
+        "noReviews": "No reviews yet. Be the first to review!",
+        "totalReviews": "{{count}} reviews",
+        "yourRating": "Your Rating",
+        "yourComment": "Your Comment (optional)",
+        "commentPlaceholder": "Share your experience with this product...",
+        "submit": "Submit Review",
+        "submitted": "Thank you for your review!",
+        "submitError": "Failed to submit review. Please try again.",
+        "invalidRating": "Please select a rating.",
+        "leaveReview": "Leave a Review"
     }
 }

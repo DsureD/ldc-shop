@@ -5,6 +5,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { BuyButton } from "@/components/buy-button"
+import { StarRating } from "@/components/star-rating"
+import { ReviewForm } from "@/components/review-form"
+import { ReviewList } from "@/components/review-list"
 
 interface Product {
     id: string
@@ -15,13 +18,35 @@ interface Product {
     category: string | null
 }
 
+interface Review {
+    id: number
+    username: string
+    rating: number
+    comment: string | null
+    createdAt: Date | string
+}
+
 interface BuyContentProps {
     product: Product
     stockCount: number
     isLoggedIn: boolean
+    reviews?: Review[]
+    averageRating?: number
+    reviewCount?: number
+    canReview?: boolean
+    reviewOrderId?: string
 }
 
-export function BuyContent({ product, stockCount, isLoggedIn }: BuyContentProps) {
+export function BuyContent({
+    product,
+    stockCount,
+    isLoggedIn,
+    reviews = [],
+    averageRating = 0,
+    reviewCount = 0,
+    canReview = false,
+    reviewOrderId
+}: BuyContentProps) {
     const { t } = useI18n()
 
     return (
@@ -109,6 +134,38 @@ export function BuyContent({ product, stockCount, isLoggedIn }: BuyContentProps)
                             </div>
                         )}
                     </CardFooter>
+                </Card>
+
+                {/* Reviews Section */}
+                <Card className="tech-card mt-8">
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="flex items-center gap-3">
+                                {t('review.title')}
+                                {reviewCount > 0 && (
+                                    <div className="flex items-center gap-2">
+                                        <StarRating rating={Math.round(averageRating)} size="sm" />
+                                        <span className="text-sm font-normal text-muted-foreground">
+                                            ({averageRating.toFixed(1)})
+                                        </span>
+                                    </div>
+                                )}
+                            </CardTitle>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        {canReview && reviewOrderId && (
+                            <div className="p-4 border rounded-lg bg-muted/20">
+                                <h3 className="text-sm font-medium mb-3">{t('review.leaveReview')}</h3>
+                                <ReviewForm productId={product.id} orderId={reviewOrderId} />
+                            </div>
+                        )}
+                        <ReviewList
+                            reviews={reviews}
+                            averageRating={averageRating}
+                            totalCount={reviewCount}
+                        />
+                    </CardContent>
                 </Card>
             </div>
         </main>

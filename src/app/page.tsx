@@ -63,6 +63,17 @@ export default async function Home() {
           value TEXT,
           updated_at TIMESTAMP DEFAULT NOW()
         );
+        -- Reviews table
+        CREATE TABLE IF NOT EXISTS reviews (
+          id SERIAL PRIMARY KEY,
+          product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+          order_id TEXT NOT NULL,
+          user_id TEXT NOT NULL,
+          username TEXT NOT NULL,
+          rating INTEGER NOT NULL,
+          comment TEXT,
+          created_at TIMESTAMP DEFAULT NOW()
+        );
       `);
 
       products = await getActiveProducts();

@@ -54,3 +54,14 @@ export const settings = pgTable('settings', {
     updatedAt: timestamp('updated_at').defaultNow(),
 });
 
+// Reviews
+export const reviews = pgTable('reviews', {
+    id: serial('id').primaryKey(),
+    productId: text('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
+    orderId: text('order_id').notNull(),
+    userId: text('user_id').notNull(),
+    username: text('username').notNull(),
+    rating: integer('rating').notNull(), // 1-5 stars
+    comment: text('comment'),
+    createdAt: timestamp('created_at').defaultNow(),
+});

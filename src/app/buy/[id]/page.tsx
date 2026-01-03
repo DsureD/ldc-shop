@@ -4,6 +4,7 @@ import { products, cards } from "@/lib/db/schema"
 import { eq, and } from "drizzle-orm"
 import { auth } from "@/lib/auth"
 import { BuyContent } from "@/components/buy-content"
+import { getProductReviews, getProductRating, canUserReview } from "@/lib/db/queries"
 
 export const dynamic = 'force-dynamic'
 
@@ -45,11 +46,31 @@ export default async function BuyPage({ params }: BuyPageProps) {
 
     const stockCount = stockResult.length
 
+    // Get reviews (with error handling for new databases)
+    let reviews: any[] = []
+    let rating = { average: 0, count: 0 }
+    let userCanReview = { canReview: false, orderId: undefined as string | undefined }
+
+    try {
+        reviews = await getProductReviews(id)
+        rating = await getProductRating(id)
+        if (session?.user?.id) {
+            userCanReview = await canUserReview(session.user.id, id)
+        }
+    } catch {
+        // Reviews table might not exist yet
+    }
+
     return (
         <BuyContent
             product={product}
             stockCount={stockCount}
             isLoggedIn={!!session?.user}
+            reviews={reviews}
+            averageRating={rating.average}
+            reviewCount={rating.count}
+            canReview={userCanReview.canReview}
+            reviewOrderId={userCanReview.orderId}
         />
     )
 }

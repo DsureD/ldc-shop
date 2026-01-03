@@ -1,5 +1,5 @@
 import { db } from "./index";
-import { products, cards, orders, settings } from "./schema";
+import { products, cards, orders, settings, reviews } from "./schema";
 import { eq, sql, desc, and, asc, gte } from "drizzle-orm";
 
 export async function getProducts() {
@@ -101,4 +101,75 @@ export async function setSetting(key: string, value: string): Promise<void> {
             target: settings.key,
             set: { value, updatedAt: new Date() }
         });
+}
+
+// Reviews
+export async function getProductReviews(productId: string) {
+    return await db.select()
+        .from(reviews)
+        .where(eq(reviews.productId, productId))
+        .orderBy(desc(reviews.createdAt));
+}
+
+export async function getProductRating(productId: string): Promise<{ average: number; count: number }> {
+    const result = await db.select({
+        avg: sql<number>`COALESCE(AVG(${reviews.rating}), 0)::float`,
+        count: sql<number>`COUNT(*)::int`
+    })
+        .from(reviews)
+        .where(eq(reviews.productId, productId));
+
+    return {
+        average: result[0]?.avg ?? 0,
+        count: result[0]?.count ?? 0
+    };
+}
+
+export async function createReview(data: {
+    productId: string;
+    orderId: string;
+    userId: string;
+    username: string;
+    rating: number;
+    comment?: string;
+}) {
+    return await db.insert(reviews).values({
+        ...data,
+        createdAt: new Date()
+    }).returning();
+}
+
+export async function canUserReview(userId: string, productId: string): Promise<{ canReview: boolean; orderId?: string }> {
+    // Check if user has a delivered order for this product that hasn't been reviewed yet
+    const deliveredOrders = await db.select({ orderId: orders.orderId })
+        .from(orders)
+        .where(and(
+            eq(orders.userId, userId),
+            eq(orders.productId, productId),
+            eq(orders.status, 'delivered')
+        ));
+
+    if (deliveredOrders.length === 0) {
+        return { canReview: false };
+    }
+
+    // Check if any of these orders haven't been reviewed
+    for (const order of deliveredOrders) {
+        const existingReview = await db.select({ id: reviews.id })
+            .from(reviews)
+            .where(eq(reviews.orderId, order.orderId));
+
+        if (existingReview.length === 0) {
+            return { canReview: true, orderId: order.orderId };
+        }
+    }
+
+    return { canReview: false };
+}
+
+export async function hasUserReviewedOrder(orderId: string): Promise<boolean> {
+    const result = await db.select({ id: reviews.id })
+        .from(reviews)
+        .where(eq(reviews.orderId, orderId));
+    return result.length > 0;
 }

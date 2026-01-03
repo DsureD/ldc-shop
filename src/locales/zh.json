@@ -152,5 +152,18 @@
         "save": "保存公告",
         "saved": "公告已保存！",
         "hint": "此公告将显示在首页。留空则不显示公告。"
+    },
+    "review": {
+        "title": "用户评价",
+        "noReviews": "暂无评价，成为第一个评价的用户吧！",
+        "totalReviews": "共 {{count}} 条评价",
+        "yourRating": "您的评分",
+        "yourComment": "您的评价（选填）",
+        "commentPlaceholder": "分享您对此商品的使用体验...",
+        "submit": "提交评价",
+        "submitted": "感谢您的评价！",
+        "submitError": "评价提交失败，请重试。",
+        "invalidRating": "请选择评分。",
+        "leaveReview": "发表评价"
     }
 }
