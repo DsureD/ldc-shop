@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { StarRating } from "@/components/star-rating"
+import ReactMarkdown from 'react-markdown'
 import { cn } from "@/lib/utils"
 
 interface Product {
@@ -196,9 +197,14 @@ export function HomeContent({ products, announcement }: HomeContentProps) {
                                             </div>
                                         )}
 
-                                        <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
-                                            {product.description || t('buy.noDescription')}
-                                        </p>
+                                        <div className="text-muted-foreground text-sm line-clamp-2 leading-relaxed prose prose-sm dark:prose-invert max-w-none [&_p]:m-0 [&_p]:inline [&_h1]:inline [&_h2]:inline [&_h3]:inline [&_h4]:inline [&_h5]:inline [&_h6]:inline [&_ul]:inline [&_ol]:inline [&_li]:inline">
+                                            <ReactMarkdown
+                                                allowedElements={["p", "strong", "em", "del", "text", "span"]}
+                                                unwrapDisallowed={true}
+                                            >
+                                                {product.description || t('buy.noDescription')}
+                                            </ReactMarkdown>
+                                        </div>
                                     </CardContent>
 
                                     {/* Footer Section */}
