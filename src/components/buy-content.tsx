@@ -8,6 +8,7 @@ import { BuyButton } from "@/components/buy-button"
 import { StarRating } from "@/components/star-rating"
 import { ReviewForm } from "@/components/review-form"
 import { ReviewList } from "@/components/review-list"
+import ReactMarkdown from 'react-markdown'
 
 interface Product {
     id: string
@@ -98,9 +99,7 @@ export function BuyContent({
                             <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-primary/30 rounded-br-xl" />
                         </div>
 
-                        import ReactMarkdown from 'react-markdown'
 
-                        // ...
 
                         {/* Description */}
                         <div className="space-y-4">
