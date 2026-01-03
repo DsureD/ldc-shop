@@ -4,6 +4,20 @@ import Link from "next/link"
 import { useI18n } from "@/lib/i18n/context"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { LanguageSwitcher } from "@/components/language-switcher"
+import { ShoppingBag } from "lucide-react"
+
+export function HeaderLogo() {
+    const { t } = useI18n()
+
+    return (
+        <Link href="/" className="flex items-center gap-2 group">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center group-hover:shadow-lg group-hover:shadow-primary/25 transition-all duration-300">
+                <ShoppingBag className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="text-sm font-semibold tracking-tight gradient-text">{t('common.appName')}</span>
+        </Link>
+    )
+}
 
 export function HeaderNav({ isAdmin }: { isAdmin: boolean }) {
     const { t } = useI18n()
