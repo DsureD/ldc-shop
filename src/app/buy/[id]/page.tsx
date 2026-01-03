@@ -49,7 +49,7 @@ export default async function BuyPage({ params }: BuyPageProps) {
     // Get reviews (with error handling for new databases)
     let reviews: any[] = []
     let rating = { average: 0, count: 0 }
-    let userCanReview = { canReview: false, orderId: undefined as string | undefined }
+    let userCanReview: { canReview: boolean; orderId?: string } = { canReview: false }
 
     try {
         reviews = await getProductReviews(id)
