@@ -12,13 +12,20 @@ const translations: Record<Locale, Translations> = { en, zh }
 interface I18nContextType {
     locale: Locale
     setLocale: (locale: Locale) => void
-    t: (key: string) => string
+    t: (key: string, params?: Record<string, string | number>) => string
 }
 
 const I18nContext = createContext<I18nContextType | null>(null)
 
 function getNestedValue(obj: any, path: string): string {
     return path.split('.').reduce((acc, part) => acc?.[part], obj) || path
+}
+
+function interpolate(text: string, params?: Record<string, string | number>): string {
+    if (!params) return text
+    return Object.entries(params).reduce((acc, [key, value]) => {
+        return acc.replace(new RegExp(`{{${key}}}`, 'g'), String(value))
+    }, text)
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
@@ -47,8 +54,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('ldc-locale', newLocale)
     }
 
-    const t = (key: string): string => {
-        return getNestedValue(translations[locale], key)
+    const t = (key: string, params?: Record<string, string | number>): string => {
+        const text = getNestedValue(translations[locale], key)
+        return interpolate(text, params)
     }
 
     // Prevent hydration mismatch
@@ -70,7 +78,10 @@ export function useI18n() {
         return {
             locale: 'en' as Locale,
             setLocale: () => { },
-            t: (key: string) => getNestedValue(en, key)
+            t: (key: string, params?: Record<string, string | number>) => {
+                const text = getNestedValue(en, key)
+                return interpolate(text, params)
+            }
         }
     }
     return context
