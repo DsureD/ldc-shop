@@ -1,11 +1,11 @@
-'use client'
-
+import { useState, useMemo } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import Link from "next/link"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { StarRating } from "@/components/star-rating"
+import { cn } from "@/lib/utils"
 
 interface Product {
     id: string
@@ -27,6 +27,19 @@ interface HomeContentProps {
 
 export function HomeContent({ products, announcement }: HomeContentProps) {
     const { t } = useI18n()
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+
+    // Extract unique categories
+    const categories = useMemo(() => {
+        const uniqueCategories = new Set(products.map(p => p.category).filter(Boolean) as string[])
+        return Array.from(uniqueCategories).sort()
+    }, [products])
+
+    // Filter products
+    const filteredProducts = useMemo(() => {
+        if (!selectedCategory) return products
+        return products.filter(p => p.category === selectedCategory)
+    }, [products, selectedCategory])
 
     return (
         <main className="container py-8 md:py-16">
@@ -46,89 +59,142 @@ export function HomeContent({ products, announcement }: HomeContentProps) {
                 </section>
             )}
 
-            {products.length === 0 ? (
-                <div className="text-center py-20">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-muted/50 mb-4">
-                        <svg className="w-8 h-8 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                {/* Sidebar / Topbar for Categories */}
+                <aside className="lg:col-span-1">
+                    <div className="sticky top-24 space-y-4">
+                        <h2 className="text-lg font-semibold tracking-tight px-1 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                                <path d="M3 6h18" />
+                                <path d="M7 12h10" />
+                                <path d="M10 18h4" />
+                            </svg>
+                            {t('common.categories')}
+                        </h2>
+                        <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
+                            <Button
+                                variant={selectedCategory === null ? "default" : "ghost"}
+                                className={cn(
+                                    "justify-start whitespace-nowrap",
+                                    selectedCategory === null ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-muted"
+                                )}
+                                onClick={() => setSelectedCategory(null)}
+                            >
+                                {t('common.all')}
+                            </Button>
+                            {categories.map(category => (
+                                <Button
+                                    key={category}
+                                    variant={selectedCategory === category ? "default" : "ghost"}
+                                    className={cn(
+                                        "justify-start capitalize whitespace-nowrap",
+                                        selectedCategory === category ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-muted"
+                                    )}
+                                    onClick={() => setSelectedCategory(category)}
+                                >
+                                    {category}
+                                </Button>
+                            ))}
+                        </div>
                     </div>
-                    <p className="text-muted-foreground font-medium">{t('home.noProducts')}</p>
-                    <p className="text-sm text-muted-foreground/60 mt-2">{t('home.checkBackLater')}</p>
-                </div>
-            ) : (
-                <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {products.map((product, index) => (
-                        <Card
-                            key={product.id}
-                            className="group overflow-hidden flex flex-col tech-card animate-fade-in"
-                            style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                            {/* Image Section */}
-                            <div className="aspect-[4/3] bg-gradient-to-br from-muted/30 to-muted/10 relative overflow-hidden">
-                                <img
-                                    src={product.image || `https://api.dicebear.com/7.x/shapes/svg?seed=${product.id}`}
-                                    alt={product.name}
-                                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                                />
-                                {/* Overlay gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                {product.category && product.category !== 'general' && (
-                                    <Badge className="absolute top-3 right-3 capitalize bg-background/80 backdrop-blur-sm border-border/50 text-foreground">
-                                        {product.category}
-                                    </Badge>
-                                )}
+                </aside>
+
+                {/* Main Product Grid */}
+                <section className="lg:col-span-3">
+                    {filteredProducts.length === 0 ? (
+                        <div className="text-center py-20 bg-muted/30 rounded-2xl border border-dashed border-muted-foreground/20">
+                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-muted/50 mb-4">
+                                <svg className="w-8 h-8 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
                             </div>
-
-                            {/* Content Section */}
-                            <CardContent className="flex-1 p-5">
-                                <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors duration-300">
-                                    {product.name}
-                                </h3>
-                                {/* Rating */}
-                                {product.reviewCount && product.reviewCount > 0 && (
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <StarRating rating={Math.round(product.rating || 0)} size="sm" />
-                                        <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
+                            <p className="text-muted-foreground font-medium">{t('home.noProducts')}</p>
+                            <p className="text-sm text-muted-foreground/60 mt-2">{t('home.checkBackLater')}</p>
+                            {selectedCategory && (
+                                <Button variant="link" onClick={() => setSelectedCategory(null)} className="mt-4">
+                                    {t('common.all')}
+                                </Button>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                            {filteredProducts.map((product, index) => (
+                                <Card
+                                    key={product.id}
+                                    className="group overflow-hidden flex flex-col tech-card animate-fade-in"
+                                    style={{ animationDelay: `${index * 50}ms` }}
+                                >
+                                    {/* Image Section */}
+                                    <div className="aspect-[4/3] bg-gradient-to-br from-muted/30 to-muted/10 relative overflow-hidden">
+                                        <img
+                                            src={product.image || `https://api.dicebear.com/7.x/shapes/svg?seed=${product.id}`}
+                                            alt={product.name}
+                                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                        {/* Overlay gradient */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        {product.category && product.category !== 'general' && (
+                                            <Badge className="absolute top-3 right-3 capitalize bg-background/80 backdrop-blur-sm border-border/50 text-foreground shadow-sm">
+                                                {product.category}
+                                            </Badge>
+                                        )}
                                     </div>
-                                )}
-                                <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
-                                    {product.description || t('buy.noDescription')}
-                                </p>
-                            </CardContent>
 
-                            {/* Footer Section */}
-                            <CardFooter className="p-5 pt-0 flex items-end justify-between gap-3">
-                                <div className="shrink-0">
-                                    <span className="text-2xl sm:text-3xl font-bold gradient-text">{Number(product.price)}</span>
-                                    <span className="text-muted-foreground text-xs sm:text-sm ml-1">{t('common.credits')}</span>
-                                </div>
-                                <div className="flex flex-col items-end gap-2 min-w-0">
-                                    <div className="flex flex-wrap justify-end gap-1.5">
-                                        <Badge variant="outline" className="text-xs text-muted-foreground border-border/50 whitespace-nowrap">
-                                            {t('common.sold')}: {product.soldCount}
-                                        </Badge>
-                                        <Badge
-                                            variant={product.stockCount > 0 ? "secondary" : "destructive"}
-                                            className="text-xs whitespace-nowrap"
-                                        >
-                                            {product.stockCount > 0 ? `${t('common.stock')}: ${product.stockCount}` : t('common.outOfStock')}
-                                        </Badge>
-                                    </div>
-                                    <Link href={`/buy/${product.id}`}>
-                                        <Button
-                                            size="sm"
-                                            className="bg-foreground text-background hover:bg-foreground/90 whitespace-nowrap"
-                                        >
-                                            {t('common.viewDetails')}
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </CardFooter>
-                        </Card>
-                    ))}
+                                    {/* Content Section */}
+                                    <CardContent className="flex-1 p-5">
+                                        <div className="flex items-start justify-between gap-2 mb-2">
+                                            <h3 className="font-semibold text-lg group-hover:text-primary transition-colors duration-300 leading-tight">
+                                                {product.name}
+                                            </h3>
+                                        </div>
+
+                                        {/* Rating */}
+                                        {product.reviewCount !== undefined && product.reviewCount > 0 && (
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <StarRating rating={Math.round(product.rating || 0)} size="sm" />
+                                                <span className="text-xs text-muted-foreground font-medium">({product.reviewCount})</span>
+                                            </div>
+                                        )}
+
+                                        <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+                                            {product.description || t('buy.noDescription')}
+                                        </p>
+                                    </CardContent>
+
+                                    {/* Footer Section */}
+                                    <CardFooter className="p-5 pt-0 flex items-end justify-between gap-3">
+                                        <div className="shrink-0 flex flex-col">
+                                            <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{t('common.credits')}</span>
+                                            <span className="text-2xl font-bold font-mono tracking-tight">{Number(product.price)}</span>
+                                        </div>
+                                        <div className="flex flex-col items-end gap-2 min-w-0">
+                                            <div className="flex flex-wrap justify-end gap-1.5 opacity-80 hover:opacity-100 transition-opacity">
+                                                <Badge variant="outline" className="text-[10px] h-5 px-1.5 text-muted-foreground border-border/50 whitespace-nowrap">
+                                                    {t('common.sold')} {product.soldCount}
+                                                </Badge>
+                                                <Badge
+                                                    variant={product.stockCount > 0 ? "secondary" : "destructive"}
+                                                    className="text-[10px] h-5 px-1.5 whitespace-nowrap"
+                                                >
+                                                    {product.stockCount > 0 ? `${t('common.stock')} ${product.stockCount}` : t('common.outOfStock')}
+                                                </Badge>
+                                            </div>
+                                            <Link href={`/buy/${product.id}`} className="w-full">
+                                                <Button
+                                                    size="sm"
+                                                    className="w-full bg-foreground text-background hover:bg-foreground/90 whitespace-nowrap shadow-md hover:shadow-lg transition-all"
+                                                >
+                                                    {t('common.viewDetails')}
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </CardFooter>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
                 </section>
-            )}
+            </div>
         </main>
     )
 }

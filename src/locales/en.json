@@ -3,6 +3,8 @@
         "appName": "LDC Shop",
         "shopNamePattern": "{{name}}'s {{appName}}",
         "login": "Sign in with Linux DO",
+        "categories": "Categories",
+        "all": "All",
         "logout": "Log out",
         "admin": "Admin",
         "adminTitle": "LDC Admin",

@@ -13,6 +13,7 @@ import { User } from "lucide-react"
 import { SignInButton } from "@/components/signin-button"
 import { SignOutButton } from "@/components/signout-button"
 import { HeaderLogo, HeaderNav, HeaderUserMenuItems, LanguageSwitcher } from "@/components/header-client-parts"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export async function SiteHeader() {
     const session = await auth()
@@ -60,6 +61,7 @@ export async function SiteHeader() {
                         ) : (
                             <SignInButton />
                         )}
+                        <ModeToggle />
                     </nav>
                 </div>
             </div>
