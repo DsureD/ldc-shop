@@ -10,6 +10,7 @@ export function SignInButton() {
     return (
         <Button
             size="sm"
+            className="bg-foreground text-background hover:bg-foreground/90"
             onClick={() => signIn("linuxdo")}
         >
             {t('common.login')}

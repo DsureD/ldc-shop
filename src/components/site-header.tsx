@@ -19,14 +19,16 @@ export async function SiteHeader() {
     const user = session?.user
 
     // Check if admin (case-insensitive)
-    const adminUsers = process.env.ADMIN_USERS?.toLowerCase().split(',') || []
+    const rawAdminUsers = process.env.ADMIN_USERS?.split(',') || []
+    const adminUsers = rawAdminUsers.map(u => u.toLowerCase())
     const isAdmin = user?.username && adminUsers.includes(user.username.toLowerCase()) || false
+    const firstAdminName = rawAdminUsers[0]?.trim() // Get first admin name for branding
 
     return (
         <header className="sticky top-0 z-40 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
                 <div className="flex gap-6 md:gap-10">
-                    <HeaderLogo />
+                    <HeaderLogo adminName={firstAdminName} />
                     <HeaderNav isAdmin={isAdmin} />
                 </div>
                 <div className="flex flex-1 items-center justify-end space-x-4">
