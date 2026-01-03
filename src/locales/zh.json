@@ -1,6 +1,7 @@
 {
     "common": {
         "appName": "LDC 商店",
+        "shopNamePattern": "{{name}}的 {{appName}}",
         "login": "使用 Linux DO 登录",
         "logout": "退出登录",
         "admin": "管理",

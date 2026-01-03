@@ -8,7 +8,9 @@ import { ShoppingBag } from "lucide-react"
 
 export function HeaderLogo({ adminName }: { adminName?: string }) {
     const { t } = useI18n()
-    const shopName = adminName ? `${adminName}'s ${t('common.appName')}` : t('common.appName')
+    const shopName = adminName
+        ? t('common.shopNamePattern', { name: adminName, appName: t('common.appName') })
+        : t('common.appName')
 
     return (
         <Link href="/" className="flex items-center gap-2 group text-muted-foreground hover:text-primary transition-colors">

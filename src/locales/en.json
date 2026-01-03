@@ -1,6 +1,7 @@
 {
     "common": {
         "appName": "LDC Shop",
+        "shopNamePattern": "{{name}}'s {{appName}}",
         "login": "Sign in with Linux DO",
         "logout": "Log out",
         "admin": "Admin",
