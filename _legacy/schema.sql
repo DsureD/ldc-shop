@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS sessions (
     avatar_url TEXT,
     trust_level INTEGER,
     expires_at DATETIME NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    csrf_token TEXT
 );
 
 -- Initial Data (Optional - for testing)
